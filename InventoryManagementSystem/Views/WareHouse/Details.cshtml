@@ -1,0 +1,178 @@
+﻿@model WareHouse
+@{
+    ViewData["Title"] = "Details";
+}
+<style>
+    p a:hover {
+        color: red !important;
+        text-decoration: underline !important;
+    }
+
+    .productDetails:hover{
+        cursor:pointer;
+    }
+</style>
+
+<div class="main-content position-relative max-height-vh-100 h-100">
+
+    <div class="container-fluid py-4">
+        <div class="d-flex flex-row-reverse">
+            <div>
+                <a class=" btn btn-outline-light " asp-action="Index">Back to List</a>
+
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+
+                <!-- Existing Products Card -->
+                <div class="card shadow-sm mb-5">
+                    <div class="card-header d-flex align-items-center">
+                        <h6 class="me-1 mb-0 fw-bold text-primary">📦 Existing Products</h6>
+                    </div>
+
+                    <div class="card-body px-0 pt-0 pb-2">
+                        <div class="table-responsive p-3">
+                            <table class="table align-items-center mb-0 table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="text-uppercase text-secondary text-xs font-weight-bolder ps-2">Product</th>
+                                        <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder">Category</th>
+                                        <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder">Description</th>
+                                        <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder">Price (£)</th>
+                                        <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder">Stock</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.InventoryItems.Count == 0)
+                                    {
+                                        <tr>
+                                            <td colspan="5" class="text-center text-danger fw-bold py-4">No Products Found!</td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        @foreach (var item in Model.InventoryItems)
+                                        {
+                                            <tr data-id="@item.ProductId" class="productDetails">
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <img src="~/images/@item?.Product.Image" class="rounded-circle me-3" style="width: 45px; height: 45px;" alt="product" />
+                                                        <div>
+                                                            <h6 class="mb-0 text-sm">@item?.Product.Name</h6>
+                                                            <small class="text-muted">ID: @item.ProductId</small>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="text-secondary text-xs fw-bold">@item?.Product.Category?.Name</span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <p class="text-xs fw-bold mb-0">@item.Product.Description</p>
+                                                </td>
+                                                <td class="text-center text-sm">
+                                                    <span class="text-dark text-xs fw-bold">@item.Product.Price</span>
+                                                </td>
+                                                <td class="text-center text-sm">
+                                                    <span class="text-dark text-xs fw-bold">@item.Quantity</span>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manager Details Card -->
+                <div class="card shadow-sm mt-4">
+                    <div class="card-header d-flex align-items-center">
+                        <h6 class="me-1 mb-0 fw-bold text-primary">👤 Manager Details</h6>
+                    </div>
+
+                    <div class="card-body d-flex align-items-center gap-4 p-4">
+                        <img src="/images/@Model.Manager.Image"
+                             class="rounded-circle shadow border border-3"
+                             style="width: 150px; height: 150px; object-fit: cover;"
+                             alt="Manager Profile" />
+                        <div>
+                            <h5 class="fw-bold mb-1">@Model.Manager.UserName</h5>
+                            <p class="mb-1"><i class="fa-solid fa-envelope text-primary me-2"></i>
+                            <a href="mailto:@Model.Manager.Email">@Model.Manager.Email</a></p>
+                            <p class="mb-1"><i class="fa-solid fa-phone text-primary me-2"></i>@Model.Manager.PhoneNumber</p>
+                            <p class="mb-0"><i class="fa-solid fa-location-dot text-primary me-2"></i>
+                                <a href="https://www.google.com/maps/search/?api=1&query=@Uri.EscapeDataString(Model.Manager.Address)"
+                                   target="_blank" class="text-decoration-none fw-semibold">
+                                    @Model.Manager.Address
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm rounded-4 overflow-hidden">
+                    <!-- Card Image -->
+                    <img src="/images/iti.jpeg" alt="Warehouse Image" class="card-img-top" style="object-fit: cover; height: 200px;">
+
+                    <!-- Card Body -->
+                    <div class="card-body text-center pt-4">
+                        <h4 class="fw-bold text-primary mb-3">
+                            🏢 @Model.Name
+                        </h4>
+
+                        <p class="mb-2 text-muted">
+                            <strong>Warehouse ID:</strong> <span class="fw-semibold">@Model.WareHouseId</span>
+                        </p>
+                        <p class="mb-2 text-muted">
+                            <i class="fa-solid fa-calendar-days text-primary me-2"></i>CreatedAt:
+                            <span class="fw-semibold">@Model.CreatedAt.ToString("dd MMMM yyyy")</span>
+                        </p>
+
+                        <p class="mb-2">
+                            <i class="fa-solid fa-location-dot text-primary me-2"></i>
+                            <span class="text-muted">Location:</span> 
+                            <a href="https://www.google.com/maps/search/?api=1&query=@Uri.EscapeDataString(Model.Location)"
+                               target="_blank" class="text-decoration-none fw-semibold">
+                                @Model.Location
+                            </a>
+                        </p>
+
+                        <p class="mb-0">
+                            <i class="fa-solid fa-phone text-primary me-2"></i>
+                            <span class="text-muted">Phone:</span> @Model.PhoneNumber
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="Tostar" />
+
+}
+
+<script src="/lib/jquery/dist/jquery.min.js"></script>
+
+<script>
+
+    $(document).ready(function(){
+      $("#flip").click(function(){
+        $("#panel").slideToggle("slow");
+      });
+
+      $(".productDetails").click(function(){
+          const productId= $(this).data('id');
+          window.location.href=`/Product/Details/${productId}`;
+      })
+    });//end of load
+   
+</script>
